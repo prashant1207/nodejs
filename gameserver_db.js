@@ -88,6 +88,4 @@ var Db = require('mongodb').Db,
 	  console.log('Express server listening on port ' + app.get('port'));
 	});
 
-	// Set up the connection to the local db
-
 });
