@@ -9,7 +9,7 @@ var Db = require('mongodb').Db,
     path = require('path'),
     app = express();
 app.set('port', 9600);
-app.set('views', path.join(__dirname, 'views')); //A
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 //Create mongoclient instance with supplied hostname and port
 var mongoclient = new MongoClient(new Server("localhost", 27017), { native_parser: true });
@@ -29,6 +29,7 @@ mongoclient.open(function (err, mongoclient) {
 
     app.get('/:method?/:username?/:score?', function (req, res) {
         var method = req.params.method;
+        logger("METHOD", method);
         if (method == "insert") {
             db.collection('userscore').insert({ "username": req.params.username, "score": req.params.score }, function (err, result) {
                 if (err) {
@@ -47,7 +48,7 @@ mongoclient.open(function (err, mongoclient) {
                 }
                 else {
                     logger("success", result);
-                    res.set('Content-Type', 'application/json'); //G
+                    res.set('Content-Type', 'application/json');
                     res.status('200').send(result);
                 }
             });
@@ -59,13 +60,17 @@ mongoclient.open(function (err, mongoclient) {
                 }
                 else {
                     logger("success", result);
-                    res.set('Content-Type', 'application/json'); //G
+                    res.set('Content-Type', 'application/json');
                     res.status('200').send(result);
                 }
             });
         }
-        else {
+        else if (method == "close"){
+        	logger("success", "CLOSED DB CONNECTION");
             mongoclient.close();
+        }
+        else{
+        	//do nothing
         }
     });
 
@@ -75,10 +80,16 @@ mongoclient.open(function (err, mongoclient) {
             console.log("---------SUCCESS----------");
             console.log(data);
         }
-        else {
+        else if(type=="error") {
             console.log("---------ERRROR----------");
             console.log(data);
         }
+        else{
+        	console.log("---------INFO----------");
+        	console.log("TYPE: "+type);
+            console.log(data);
+        }
+        console.log("#######################");
     }
 
     app.use(function (req, res) {
