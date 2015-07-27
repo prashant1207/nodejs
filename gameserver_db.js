@@ -1,4 +1,5 @@
 //Adding required node modules
+//Please use MongoDB 1.4.x(npm install mongodb@1.4.x)
 var Db = require('mongodb').Db,
     MongoClient = require('mongodb').MongoClient,
     Server = require('mongodb').Server,
